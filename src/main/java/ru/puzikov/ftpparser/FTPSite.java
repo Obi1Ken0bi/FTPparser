@@ -46,16 +46,20 @@ public class FTPSite {
                 Element versionEl = info1.select("span[style]").first();
                 String version = "first";
                 if (versionEl != null) {
+                    version=versionEl.text().replaceFirst(".*\\|","");
+                    if (version.isEmpty()||version.isBlank()){
+                        version="first";
+                    }
 
                     Pattern vPattern = Pattern.compile("&gt;&gt;&gt;.*");
                     Matcher vMatcher = vPattern.matcher(versionEl.toString());
                     if (vMatcher.find()) {
-                        version = vMatcher.group().replaceFirst("&gt;&gt;&gt;", "");
+                        version = vMatcher.group().replaceAll("&gt;&gt;&gt;", "");
                         version = version.replaceFirst("</span>", "").trim();
 
                     }
                 }
-                System.out.println(version);
+
 
                 //link
                 String infoS = info.toString();
@@ -64,7 +68,7 @@ public class FTPSite {
                 String link = "";
                 if (matcher.find()) {
                     link = matcher.group().replaceAll("\"", "");
-                    System.out.println(link);
+
 
                 }
                 //name
@@ -75,6 +79,10 @@ public class FTPSite {
                         .replaceFirst("((<h1>)|(<h1/>)|( играть по сети и интернету онлайн( / лан)?))", "")
                         .replaceAll("\\s[а-яА-я]+", "");
                 System.out.println(clearName);
+                System.out.println(version);
+                System.out.println(link);
+                if(version.length()>200)
+                    version="first";
                 if (!gamesRepository.existsByName(clearName)) {
                     gamesRepository.save(new Game(clearName, link, version));
                     System.out.println("added to DB!");
