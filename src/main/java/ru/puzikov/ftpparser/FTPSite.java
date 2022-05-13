@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.sql.Time;
-import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,23 +30,22 @@ public class FTPSite {
     }
 
 
-    public boolean GetGames(String link1) throws IOException {
+    public boolean getGames(String link1) throws IOException {
         try {
 
 
             Document doc = Jsoup.connect(link1).get();
             Elements games = doc.select(".base");
             Elements nameAndLink = games.select(".header-h1");
-            Elements links = nameAndLink.select("a[href]");
             for (Element info1 : games) {
                 //version
                 Element info = info1.select("a[href]").first();
                 Element versionEl = info1.select("span[style]").first();
                 String version = "first";
                 if (versionEl != null) {
-                    version=versionEl.text().replaceFirst(".*\\|","");
-                    if (version.isEmpty()||version.isBlank()){
-                        version="first";
+                    version = versionEl.text().replaceFirst(".*\\|", "");
+                    if (version.isEmpty() || version.isBlank()) {
+                        version = "first";
                     }
 
                     Pattern vPattern = Pattern.compile("&gt;&gt;&gt;.*");
@@ -62,6 +59,7 @@ public class FTPSite {
 
 
                 //link
+                assert info != null;
                 String infoS = info.toString();
                 Pattern linkPattern = Pattern.compile("\".*?\"");
                 Matcher matcher = linkPattern.matcher(infoS);
@@ -73,6 +71,7 @@ public class FTPSite {
                 }
                 //name
                 Element name = info.select("h1").first();
+                assert name != null;
                 String clearName = name.text()
                         .trim()
                         .toLowerCase(Locale.ROOT)
@@ -81,8 +80,8 @@ public class FTPSite {
                 System.out.println(clearName);
                 System.out.println(version);
                 System.out.println(link);
-                if(version.length()>200)
-                    version="first";
+                if (version.length() > 200)
+                    version = "first";
                 if (!gamesRepository.existsByName(clearName)) {
                     gamesRepository.save(new Game(clearName, link, version));
                     System.out.println("added to DB!");
@@ -101,7 +100,7 @@ public class FTPSite {
 
 
             return false;
-        }catch (UnknownHostException e){
+        } catch (UnknownHostException e) {
             e.printStackTrace();
             return false;
         }
@@ -110,9 +109,9 @@ public class FTPSite {
     public void getAllGames() {
         try {
             String staticLink = "https://freetp.org/";
-            GetGames(staticLink);
+            getGames(staticLink);
             for (int i = 2; i < 179; i++) {
-                GetGames(staticLink + "/page/" + i);
+                getGames(staticLink + "/page/" + i);
 
             }
         } catch (IOException e) {

@@ -15,7 +15,7 @@ public class FtPparserApplication {
     private static final Logger log = LoggerFactory.getLogger(FtPparserApplication.class);
     final
     FTPSite ftpSite;
-    boolean isFirst=true;
+    boolean isFirst = true;
 
 
     public FtPparserApplication(FTPSite ftpSite) {
@@ -34,13 +34,13 @@ public class FtPparserApplication {
     CommandLineRunner parser(GamesRepository gamesRepository) {
         return (args) -> {
             while (true) {
-                if(isFirst){
+                if (isFirst) {
                     ftpSite.getAllGames();
-                    isFirst=false;
+                    isFirst = false;
                 }
-                ftpSite.GetGames("https://freetp.org/");
+                ftpSite.getGames("https://freetp.org/");
                 TimeUnit.SECONDS.sleep(60);
-                log.info("KEKW");
+                log.info("Parse completed");
 
             }
 
