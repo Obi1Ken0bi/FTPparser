@@ -1,6 +1,7 @@
 package ru.puzikov.ftpparser;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,11 +19,13 @@ import java.util.List;
 @Service
 public class WriteRequester {
     private final static String QUEUE_NAME = "hello";
+    @Value("${writer.url}")
+    private String uri;
 
 
     public void send(String text) {
         RestTemplate restTemplate = new RestTemplate();
-        String uri = "http://host.docker.internal:8080/write";
+        String uri = this.uri+"/write";
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
