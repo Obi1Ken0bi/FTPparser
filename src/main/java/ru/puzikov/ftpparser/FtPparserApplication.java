@@ -34,7 +34,7 @@ public class FtPparserApplication {
 
     }
 
-    @Scheduled(fixedDelay = 10)
+    @Scheduled(fixedDelay = 10000)
     void parser() {
 
 

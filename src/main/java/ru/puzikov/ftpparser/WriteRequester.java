@@ -25,7 +25,6 @@ public class WriteRequester {
 
     public void send(String text) {
         RestTemplate restTemplate = new RestTemplate();
-        String uri = this.uri + "/write";
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
@@ -36,7 +35,7 @@ public class WriteRequester {
 
             restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }
